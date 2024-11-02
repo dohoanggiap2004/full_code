@@ -12,6 +12,7 @@ function addToCart(laptop) {
   if (existingProductIndex !== -1) {
     // Nếu sản phẩm đã có, tăng số lượng
     cart[existingProductIndex].quantity += 1;
+    console.log(cart);
   } else {
     // Nếu chưa có, thêm sản phẩm vào giỏ
     laptop.quantity = 1; // Gán số lượng ban đầu

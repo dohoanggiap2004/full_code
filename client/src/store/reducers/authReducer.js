@@ -1,8 +1,10 @@
 import { combineReducers, createSlice } from '@reduxjs/toolkit';
-
+import Cookies from 'js-cookie'
 const initialState = {
   loading: false,
-  isLogin: false,
+  isLoginUser: false,
+  isLoginAdmin: false,
+  role: '',
   error: null,
 };
 
@@ -12,22 +14,40 @@ const loginSlice = createSlice({
   reducers: {
     loginRequest(state) {
       state.loading = true;
+      state.role = '';
       state.error = null;
     },
-    loginSuccess(state, action) {
+    loginUserSuccess(state, action) {
       state.loading = false;
-      state.isLogin = true;
+      state.isLoginUser = true;
+      state.role = 'user'
+    },
+    loginAdminSuccess(state, action) {
+      state.loading = false;
+      state.isLoginAdmin = true;
+      state.role = 'admin'
     },
     loginFailure(state, action) {
       state.loading = false;
       state.error = action.payload;
     },
+    logoutUserSuccess(state) {
+      state.isLoginUser = false;
+      state.role = '';
+      state.error = null; // Xóa lỗi nếu có
+    },
+    logoutAdminSuccess(state) {
+      state.isLoginAdmin = false;
+      state.role = '';
+      state.error = null; // Xóa lỗi nếu có
+    },
   },
 });
 
+
 const authReducer = combineReducers({
-    login: loginSlice.reducer
+    login: loginSlice.reducer,
 })
 
-export const { loginRequest, loginSuccess, loginFailure } = loginSlice.actions;
+export const { loginRequest, loginUserSuccess, loginAdminSuccess, loginFailure, logoutAdminSuccess, logoutUserSuccess } = loginSlice.actions;
 export default authReducer

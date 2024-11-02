@@ -8,7 +8,9 @@ const corsOptions = {
             callback(new Error('Not allowed to CORS'), false)
         }
     },
-    optionSuccessStatus: 200
+    credentials: true, // Cho phép cookies
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Các phương thức cho phép
+    optionSuccessStatus: 200,
 }
 
 

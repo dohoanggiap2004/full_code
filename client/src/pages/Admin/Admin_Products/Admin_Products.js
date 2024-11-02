@@ -1,8 +1,19 @@
 import Sidebar from "../../../components/Admin/Sidebar/Sidebar";
 import EditProductModal from "../../../components/Admin/Modal/EditProductModal";
-import DeleteModal from "../../../components/Admin/Modal/DeleteModal";
+import ConfirmModal from "../../../components/Admin/Modal/ConfirmModal";
 import AddLaptop from "../../../components/Admin/Modal/AddLaptop";
+import React, { useState } from "react";
+import EditOrderModal from "../../../components/Admin/Modal/EditOrderModal";
 export default function Products() {
+  // const [laptops, setLaptops] = useState([])
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
+  const toggleModal = () => {
+    setIsModalOpen((prev) => !prev);
+  }
+  const handleSelected = (value) => {
+      setIsDelete(value);
+  }
   const laptops = [
     {
       laptop_id: 1,
@@ -53,6 +64,23 @@ export default function Products() {
       os: "Windows 11",
     },
   ];
+  
+  // useEffect(() => {
+  //     const getLaptops = async () =>{
+  //       try {
+  //         const response = await axios.get('api/laptops')
+  //         console.log(response.data)
+  //         setLaptops(response.data)
+  //       } catch (error) {
+  //         console.log(error)
+  //       }
+  //     }
+  //     getLaptops()
+  // }, [])
+  // if (!Array.isArray(laptops)) {
+  //   console.error('Expected laptops to be an array, but got:', laptops);
+  //   return <div>No laptops available</div>;
+  // }
 
   return (
     <>
@@ -113,8 +141,21 @@ export default function Products() {
                     <td className="px-6 py-4">{laptop.imageUrl}</td>
                     <td className="px-6 py-4">{laptop.os}</td>
                     <td className="px-6 py-4">
-                      <EditProductModal laptop={laptop} />
-                      <DeleteModal />
+                      <div className='flex items-center gap-4'>
+                        <EditProductModal laptop={laptop}/>
+                        <a
+                            onClick={toggleModal}
+                            className="font-medium text-red-600 dark:text-blue-500 hover:bg-red-300 border border-red-600 rounded-md p-1 "
+                        >
+                          Delete
+                        </a>
+                        <ConfirmModal
+                            isOpen={isModalOpen}
+                            toggleModal={toggleModal}
+                            handleSelected={handleSelected}
+                            confirmText="Bạn có chắc chắn muốn xóa?"
+                        />
+                      </div>
                     </td>
                   </tr>
                 </>

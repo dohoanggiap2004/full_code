@@ -4,7 +4,7 @@ const UserController = require('../../app//controllers/apiController/UserControl
 const verifyJWT = require('../../middlewares/verifyJWT')
 const verifyRoles = require('../../middlewares/verifyRoles')
 
-router.get('/', verifyJWT, verifyRoles('user'), UserController.getUsers)
+// router.get('/', verifyJWT, verifyRoles('user'), UserController.getUsers)
 router.get('/', UserController.getUsers)
 router.get('/:id', UserController.getUserById)
 router.post('/', UserController.createUser)

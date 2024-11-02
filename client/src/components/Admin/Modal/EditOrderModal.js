@@ -3,7 +3,7 @@ import React, { useState } from "react";
 const EditOrderModal = ({ handleSelected, order }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
-    order_id: order.order_id,
+    orderId: order.orderId,
     orderDate: order.orderDate,
     status: order.status,
     deliveryDate: order.deliveryDate,
@@ -53,7 +53,7 @@ const EditOrderModal = ({ handleSelected, order }) => {
       {/* Button to open the modal */}
       <a
         onClick={toggleModal}
-        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+        className="font-medium text-blue-600 dark:text-blue-500 hover:bg-blue-300 border border-blue-500 rounded-md px-3 py-1"
       >
         Edit
       </a>

@@ -1,9 +1,16 @@
 import Layout from "../../layout/Layout";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "../../config/axiosConfig";
+import { instanceNodeJs } from "../../config/axiosConfig";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../../store/actions/authAction";
+import ConfirmModal from "../../components/Admin/Modal/ConfirmModal";
 export default function UserProfile() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [error, setError] = useState("");
+  const [isLogout, setIsLogout] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     fullname: "",
     phone: "",
@@ -13,7 +20,11 @@ export default function UserProfile() {
     confirmPassword: "",
     dob: "",
   });
-  const [error, setError] = useState("");
+
+  const toggleModal = () => {
+    setIsModalOpen((prev) => !prev);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -21,10 +32,27 @@ export default function UserProfile() {
       [name]: value,
     });
   };
+
+  const handleSelected = (value) => {
+    setIsLogout(value);
+  };
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    navigate("/");
+  };
+
+  useEffect(() => {
+    if (isLogout) {
+      handleLogout();
+    }
+  }, [isLogout]);
+
   const validatePhoneNumber = (phone) => {
     const phoneRegex = /^[0-9]{10}$/; // Số điện thoại chứa 10 chữ số
     return phoneRegex.test(phone);
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add form submission logic here
@@ -37,7 +65,7 @@ export default function UserProfile() {
     } else {
       setError("");
       // Xử lý logic gửi form ở đây
-      const response = axios.post("/register", formData);
+      const response = instanceNodeJs.post("/register", formData);
       if (response.ok) {
         navigate("/login");
       } else {
@@ -48,17 +76,6 @@ export default function UserProfile() {
     console.log(formData);
   };
 
-//   const handleLogout = async () => {
-//     localStorage.removeItem("accessToken"); // Xóa token
-//     setIsLogin(false); // Cập nhật trạng thái
-//     const res = await fetch("http://localhost:8000/logout", {
-//       method: "POST",
-//       credentials: "include",
-//     });
-//     if (res.ok) {
-//       console.log("logOut successfully");
-//     }
-//   };
   return (
     <>
       <Layout>
@@ -194,7 +211,9 @@ export default function UserProfile() {
                   </a>
                 </div>
 
-                <div className="flex items-center mb-16 hover:text-red-500 group">
+                <div
+                  className="flex items-center mb-16 hover:text-red-500 group"
+                >
                   <svg
                     className="h-5 w-5 fill-current text-black group-hover:text-red-500"
                     viewBox="0 0 24 24"
@@ -211,14 +230,20 @@ export default function UserProfile() {
                       <path d="M5 2C3.34315 2 2 3.34315 2 5V19C2 20.6569 3.34315 22 5 22H14.5C15.8807 22 17 20.8807 17 19.5V16.7326C16.8519 16.647 16.7125 16.5409 16.5858 16.4142C15.9314 15.7598 15.8253 14.7649 16.2674 14H13C11.8954 14 11 13.1046 11 12C11 10.8954 11.8954 10 13 10H16.2674C15.8253 9.23514 15.9314 8.24015 16.5858 7.58579C16.7125 7.4591 16.8519 7.35296 17 7.26738V4.5C17 3.11929 15.8807 2 14.5 2H5Z"></path>
                     </g>
                   </svg>
-                  <a className="font-bold text-md text-gray-600 group-hover:text-red-500 ms-3">
+                 
+                  <a className="font-bold text-md text-gray-600 group-hover:text-red-500 ms-3" onClick={toggleModal}>
                     Đăng xuất
                   </a>
+                  <ConfirmModal
+                    isOpen={isModalOpen}
+                    toggleModal={toggleModal}
+                    handleSelected={handleSelected}
+                    confirmText={"Bạn có chắc muốn đăng xuất?"}
+                  />
                 </div>
               </div>
             </div>
           </div>
-
 
           <div className="lg:col-span-9 col-span-12 lg:mt-0 -mt-2 bg-white rounded-md shadow-md pb-10">
             <div className="ms-4">

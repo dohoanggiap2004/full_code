@@ -31,4 +31,7 @@ router.get("/auth/google/failure", (req, res) => {
 // login local
 router.post("/auth/login", AuthenticationController.authenticateLocal);
 
+//login admin
+router.post("/auth/admin/login", AuthenticationController.authenticateLocalAdmin);
+
 module.exports = router;

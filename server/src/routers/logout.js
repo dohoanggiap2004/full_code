@@ -1,18 +1,20 @@
 const express = require("express");
-const pool = require("../config/dbConn");
 const router = express.Router();
+const {sequelize} = require("../config/sequelizeConnect");
 
-router.post("/logout", async (req, res, next) => {
-  const connection = await pool.getConnection();
+router.get("/logout", async (req, res, next) => {
+
   try {
     const refreshToken = req.cookies.refreshToken;
 
     // Delete refresh token from the database
     const [
       results,
-    ] = await connection.execute("DELETE FROM refreshtokens WHERE token = ?", [
-      refreshToken,
-    ]);
+    ] = await sequelize.query("DELETE FROM refreshtokens WHERE token = ?",
+        {
+          replacements: [refreshToken],
+        }
+    )
 
     // Clear the refresh token from the cookies first
     res.clearCookie("refreshToken", {
@@ -40,9 +42,8 @@ router.post("/logout", async (req, res, next) => {
     res.status(500).json({
       mes: "Internal server error",
     });
-  } finally {
-    if (connection) connection.release(); // Release MySQL connection back to the pool
   }
+
 });
 
 module.exports = router;

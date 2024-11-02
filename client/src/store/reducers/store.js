@@ -1,10 +1,25 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './reducers/authReducer';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import rootReducer from './rootReducer';
 
+// Cấu hình redux-persist
+const persistConfig = {
+  key: 'root',
+  storage, 
+  whitelist: ['auth'], // Chỉ lưu state của auth và cart
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+// Tạo store với persistedReducer
 const store = configureStore({
-  reducer: {
-    auth: authReducer,
-  },
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false, 
+    }),
 });
 
+export const persistor = persistStore(store);
 export default store;

@@ -5,6 +5,11 @@ import { useLocation } from "react-router-dom";
 import CardEstimation from "../../components/CardEstimation/CardEstimation";
 const Estimation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    interestRate: "",
+    term: "",
+  });
+  // const [financingOptions, setFinancingOptions] = useState([])
   const location = useLocation();
   const laptop = location.state;
   // const laptop = {
@@ -26,44 +31,76 @@ const Estimation = () => {
   //   imageSrc: "/laptop.png",
   // };
   const handleClick = () => {
-    console.log(formData)
+    console.log(formData);
     setIsOpen(true);
+    // const getFinancingOptions = async () =>{
+    //   try {
+    //     const response = await axios.get('api/financing-options', {
+    //           params:{
+    //             ...formData
+    //           }
+    //     })
+    //     console.log(response.data)
+    //     setFinancingOptions(response.data)
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
+    // }
+    // getFinancingOptions()
   };
-  const [formData, setFormData] = useState({
-    interestRate: "",
-    term: "",
-  })
+
   const handleChange = (e) => {
-    const {name, value} = e.target
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
-    })
+      [name]: value,
+    });
+  };
 
-  } 
+  // useEffect(() => {
+  //     const getFinancingOptions = async () =>{
+  //       try {
+  //         const response = await axios.get('api/financing-options', {
+  //               params:{
+  //                 ...formData
+  //               }
+  //         })
+  //         console.log(response.data)
+  //         setFinancingOptions(response.data)
+  //       } catch (error) {
+  //         console.log(error)
+  //       }
+  //     }
+  //     getFinancingOptions()
+  // }, [])
+  // if (!Array.isArray(financingOptions)) {
+  //   console.error('Expected financingOptions to be an array, but got:', financingOptions);
+  //   return <div>No laptops available</div>;
+  // }
+
   const financingOptions = [
-      {
-        company: "fecredit",
-        price: 11990000,
-        downPayment: 1199000,
-        term: "9 tháng",
-        monthlyInstallment: 1211000,
-        interestRate: "0%",
-        requiredDocuments: ["CMND/CCCD"],
-        totalPayment: 12098000,
-        priceDifference: 108000,
-      },
-      {
-        company: "acs",
-        price: 10990000,
-        downPayment: 1099000,
-        term: "9 tháng",
-        monthlyInstallment: 1435000,
-        interestRate: "5.94% / 3.3%",
-        requiredDocuments: ["CMND/CCCD"],
-        totalPayment: 14014000,
-        priceDifference: 3024000,
-      },
+    {
+      company: "fecredit",
+      price: 11990000,
+      downPayment: 1199000,
+      term: "9 tháng",
+      monthlyInstallment: 1211000,
+      interestRate: "0%",
+      requiredDocuments: ["CMND/CCCD"],
+      totalPayment: 12098000,
+      priceDifference: 108000,
+    },
+    {
+      company: "acs",
+      price: 10990000,
+      downPayment: 1099000,
+      term: "9 tháng",
+      monthlyInstallment: 1435000,
+      interestRate: "5.94% / 3.3%",
+      requiredDocuments: ["CMND/CCCD"],
+      totalPayment: 14014000,
+      priceDifference: 3024000,
+    },
   ];
 
   return (
@@ -208,7 +245,8 @@ const Estimation = () => {
                         </p>
                         {/* ổ cứng */}
                         <p className="bg-gray-100 text-gray-600 text-center h-12 flex items-center justify-center">
-                          {option.price / 100 * (parseInt(formData.interestRate))}
+                          {(option.price / 100) *
+                            parseInt(formData.interestRate)}
                         </p>
                         {/* card đồ họa */}
                         <p className="h-12 text-gray-600 px-6 text-center leading-relaxed flex items-center justify-center bg-gray-200">
@@ -238,9 +276,7 @@ const Estimation = () => {
                   </div>
                 ) : (
                   <div className="text-center text-xl text-red-600 flex items-center mx-auto">
-                    <p>
-                      Không tìm thấy gói trả góp phù hợp, vui lòng thử lại
-                    </p>
+                    <p>Không tìm thấy gói trả góp phù hợp, vui lòng thử lại</p>
                   </div>
                 )}
               </div>

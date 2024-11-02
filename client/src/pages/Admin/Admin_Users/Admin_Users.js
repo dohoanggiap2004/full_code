@@ -1,12 +1,20 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../../../components/Admin/Sidebar/Sidebar";
-import DeleteModal from "../../../components/Admin/Modal/DeleteModal";
+import ConfirmModal from "../../../components/Admin/Modal/ConfirmModal";
 import EditUserModal from "../../../components/Admin/Modal/EditUserModal";
+import EditOrderModal from "../../../components/Admin/Modal/EditOrderModal";
 export default function Users() {
   const [isDelete, setIsDetele] = useState(false);
+  // const [users, setUsers] = useState([])
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const toggleModal = () => {
+    setIsModalOpen((prev) => !prev);
+  };
+
   const handleSelected = (value) => {
     setIsDetele(value);
   };
+
   const users = [
     {
       id: 1,
@@ -33,6 +41,23 @@ export default function Users() {
       dob: "1995-08-20",
     },
   ];
+
+  //   useEffect(() => {
+  //     const getUsers = async () =>{
+  //       try {
+  //         const response = await axios.get('api/users')
+  //         console.log(response.data)
+  //         setUsers(response.data)
+  //       } catch (error) {
+  //         console.log(error)
+  //       }
+  //     }
+  //     getUsers()
+  // }, [])
+  // if (!Array.isArray(users)) {
+  //   console.error('Expected users to be an array, but got:', users);
+  //   return <div>No users available</div>;
+  // }
 
   return (
     <>
@@ -84,8 +109,21 @@ export default function Users() {
                     <td className="px-6 py-4">{user.phone}</td>
                     <td className="px-6 py-4">{user.dob}</td>
                     <td className="px-6 py-4 flex">
-                      <EditUserModal user={user}/>
-                      <DeleteModal handleSelected={handleSelected} />
+                      <div className='flex items-center gap-4'>
+                        <EditUserModal user={user}/>
+                        <a
+                            onClick={toggleModal}
+                            className="font-medium text-red-600 dark:text-blue-500 hover:bg-red-300 border border-red-600 rounded-md p-1 "
+                        >
+                          Delete
+                        </a>
+                        <ConfirmModal
+                            isOpen={isModalOpen}
+                            toggleModal={toggleModal}
+                            handleSelected={handleSelected}
+                            confirmText="Bạn có chắc chắn muốn xóa?"
+                        />
+                      </div>
                     </td>
                   </tr>
                 </>

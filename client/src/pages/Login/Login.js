@@ -1,11 +1,16 @@
 import Layout from "../../layout/Layout";
-import React from "react";
+import React, { useEffect } from "react";
 import "./style.css";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginUser, loginGG } from "../../store/actions/authAction";
+import { useDispatch, useSelector } from "react-redux";
+
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const { isLoginUser, error } = useSelector((state) => state.auth.login);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -20,28 +25,28 @@ const Login = () => {
   };
 
   const navigate = useNavigate();
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:8000/auth/login", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    dispatch(loginUser(formData));
+  };
 
-    if (response.ok) {
+
+
+  useEffect(() => {
+    if (isLoginUser) {
       navigate("/");
       console.log("Login successful");
     } else {
       navigate("/login");
+      console.log(error);
       console.log("Login failed");
     }
-  };
+  }, [isLoginUser])
+
 
   const handleClickGG = () => {
-    window.location.href = "http://localhost:8000/auth/google"; // Redirect to Google OAuth
+    // window.location.href = "http://localhost:8000/auth/google"; // Redirect to Google OAuth
+    dispatch(loginGG())
   };
   return (
     <>

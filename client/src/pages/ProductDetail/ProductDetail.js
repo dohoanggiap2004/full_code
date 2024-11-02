@@ -3,12 +3,33 @@ import "./style.css";
 import { useState } from "react";
 import Collapse from "../../components/Collapse/Collapse";
 import { Button } from "@headlessui/react";
-import { Link } from "react-router-dom";
+import { Link, useParams,  } from "react-router-dom";
 import { addToCart } from "../../services/cartService";
 const ProductDetail = () => {
+  const id = useParams();
+
   const [isOpen1, setIsOpen1] = useState(true);
   const [isOpen2, setIsOpen2] = useState(false);
   const [isOpen3, setIsOpen3] = useState(false);
+  //call api get laptop by id
+  // const [laptop, setLaptop] = useState('')
+  // useEffect(() => {
+  //     const getLaptop= async () =>{
+  //       try {
+  //         const response = await axios.get(`api/laptop/${id}`)
+  //         console.log(response.data)
+  //         setLaptop(response.data)
+  //       } catch (error) {
+  //         console.log(error)
+  //       }
+  //     }
+  //     getLaptop()
+  // }, [id])
+  // if (!laptop) {
+  //   console.error('Expected laptops to be an array, but got:', laptop);
+  //   return <div>No laptops available</div>;
+  // }
+ 
   const handleOpen1 = () => {
     setIsOpen2(false);
     setIsOpen1(!isOpen1); // Toggle only isOpen1
@@ -52,6 +73,7 @@ const ProductDetail = () => {
   const handleOpenChange = (openState) => {
     setIsOpen3(openState);
   };
+
   return (
     <>
       <Layout>
@@ -166,8 +188,9 @@ const ProductDetail = () => {
                 </div>
 
                 <div className="flex space-x-4 mb-6">
-                  <button className="bg-indigo-600 flex gap-2 items-center text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  onClick={() => addToCart(laptop)}
+                  <button
+                    className="bg-indigo-600 flex gap-2 items-center text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    onClick={() => addToCart(laptop)}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
